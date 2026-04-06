@@ -13,8 +13,8 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 p-6 sm:p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-center font-mono text-sm flex flex-col gap-8">
         <div className="flex flex-col items-center gap-4">
-          <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-indigo-500/30 before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-500/40 after:via-indigo-500/40 after:blur-2xl after:content-['']">
-            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white drop-shadow-lg z-10 text-center">
+          <div className="pointer-events-none relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-indigo-500/30 before:to-transparent before:blur-2xl before:-z-10 before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-500/40 after:via-indigo-500/40 after:blur-2xl after:content-['']">
+            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white drop-shadow-lg z-10 text-center pointer-events-auto">
               Next.js + <span className="text-indigo-400">Tailwind</span> + <span className="text-sky-400">RTK</span>
             </h1>
           </div>
