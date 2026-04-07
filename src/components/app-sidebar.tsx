@@ -7,7 +7,8 @@ import {
     Users,
     GraduationCap,
     Settings,
-    LogOut
+    LogOut,
+    ShieldCheck
 } from "lucide-react"
 
 import {
@@ -33,19 +34,18 @@ const data = {
         { title: "Students", url: "/admin/students", icon: GraduationCap },
         { title: "Academics", url: "/admin/academics", icon: BookOpen },
     ],
+    // Added a separate section for configuration
+    navSecondary: [
+        { title: "Settings", url: "/admin/settings", icon: Settings },
+    ]
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-    // ✅ FIX: Call the hook here, at the top level of the component
     const dispatch = useAppDispatch();
 
     const handleLogout = async () => {
-        // 1. Clear Redux State using the dispatch we initialized above
         dispatch(logoutAction());
-
-        // 2. Clear Supabase Session via Server Action
         const result = await signOut();
-
         if (result?.error) {
             toast.error(result.error);
         }
@@ -68,6 +68,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <SidebarGroupLabel>Management</SidebarGroupLabel>
                     <SidebarMenu>
                         {data.navMain.map((item) => (
+                            <SidebarMenuItem key={item.title}>
+                                <SidebarMenuButton asChild tooltip={item.title}>
+                                    <a href={item.url}>
+                                        <item.icon />
+                                        <span>{item.title}</span>
+                                    </a>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        ))}
+                    </SidebarMenu>
+                </SidebarGroup>
+
+                {/* NEW: Settings Group */}
+                <SidebarGroup>
+                    <SidebarGroupLabel>Configuration</SidebarGroupLabel>
+                    <SidebarMenu>
+                        {data.navSecondary.map((item) => (
                             <SidebarMenuItem key={item.title}>
                                 <SidebarMenuButton asChild tooltip={item.title}>
                                     <a href={item.url}>
