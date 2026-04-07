@@ -8,7 +8,8 @@ import {
     GraduationCap,
     Settings,
     LogOut,
-    ShieldCheck
+    ShieldCheck,
+    Clock
 } from "lucide-react"
 
 import {
@@ -33,6 +34,10 @@ const data = {
         { title: "Teachers", url: "/admin/teachers", icon: Users },
         { title: "Students", url: "/admin/students", icon: GraduationCap },
         { title: "Academics", url: "/admin/academics", icon: BookOpen },
+    ],
+    configMenu: [
+        { title: "Academic Years", url: "/admin/settings/years", icon: Clock },
+        { title: "Grades & Sections", url: "/admin/settings/grades", icon: ShieldCheck },
     ],
     // Added a separate section for configuration
     navSecondary: [
@@ -79,7 +84,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         ))}
                     </SidebarMenu>
                 </SidebarGroup>
-
+                <SidebarGroup>
+                    <SidebarGroupLabel>School Configuration</SidebarGroupLabel>
+                    <SidebarMenu>
+                        {data.configMenu.map((item) => (
+                            <SidebarMenuItem key={item.title}>
+                                <SidebarMenuButton asChild tooltip={item.title}>
+                                    <a href={item.url}>
+                                        <item.icon />
+                                        <span>{item.title}</span>
+                                    </a>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        ))}
+                    </SidebarMenu>
+                </SidebarGroup>
                 {/* NEW: Settings Group */}
                 <SidebarGroup>
                     <SidebarGroupLabel>Configuration</SidebarGroupLabel>

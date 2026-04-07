@@ -2,7 +2,7 @@
 "use server";
 
 import { db } from "@/db";
-import { academicYears } from "@/db/schema";
+import { academicYears, grades, sections } from "@/db/schema";
 import { revalidatePath } from "next/cache";
 import { eq, not } from "drizzle-orm";
 
@@ -40,5 +40,72 @@ export async function setYearAsCurrent(id: number) {
         return { success: true };
     } catch (error) {
         return { error: "Failed to update active year" };
+    }
+}
+
+export async function createGradeWithSections(values: {
+    level: string;
+    name: string;
+    sections: { name: string; roomNumber?: string }[]
+}) {
+    try {
+        return await db.transaction(async (tx) => {
+            // 1. Insert the Grade
+            const [newGrade] = await tx.insert(grades).values({
+                level: values.level,
+                name: values.name,
+            }).returning();
+
+            // 2. Insert the Sections linked to that Grade
+            if (values.sections.length > 0) {
+                await tx.insert(sections).values(
+                    values.sections.map(s => ({
+                        name: s.name,
+                        roomNumber: s.roomNumber,
+                        gradeId: newGrade.id,
+                    }))
+                );
+            }
+
+            revalidatePath("/admin/settings");
+            return { success: true };
+        });
+    } catch (error: any) {
+        console.error(error);
+        return { error: error.message || "Failed to create grade structure" };
+    }
+}
+export async function deleteGrade(id: number) {
+    try {
+        await db.delete(grades).where(eq(grades.id, id));
+        revalidatePath("/admin/settings");
+        return { success: true };
+    } catch (error: any) {
+        return { error: error.message || "Failed to delete grade" };
+    }
+}
+
+export async function updateGrade(id: number, values: { level: string; name: string }) {
+    try {
+        await db.update(grades)
+            .set({ level: values.level, name: values.name })
+            .where(eq(grades.id, id));
+
+        revalidatePath("/admin/settings");
+        return { success: true };
+    } catch (error: any) {
+        return { error: error.message || "Failed to update grade" };
+    }
+}
+export async function assignClassTeacher(sectionId: number, teacherId: string | null) {
+    try {
+        await db.update(sections)
+            .set({ classTeacherId: teacherId })
+            .where(eq(sections.id, sectionId));
+
+        revalidatePath("/admin/settings");
+        return { success: true };
+    } catch (error: any) {
+        return { error: error.message || "Failed to assign teacher" };
     }
 }
